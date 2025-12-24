@@ -1,7 +1,7 @@
 #  Game of Life (pygame learning project)
 
 A simple implementation of **Conway’s Game of Life** written in Python using **pygame**.
-I have used this video as a guide on writing the logic: https://www.youtube.com/watch?v=ouipbDkwHWA
+Inspired by this amazing video where people have built entire computers with this logic: https://www.youtube.com/watch?v=Kk2MH9O4pXY
 
 This project is a **learning exercise** focused on understanding pygame fundamentals such as the game loop, timing, rendering a grid, and separating simulation logic from display code.  
 It is intentionally kept simple and readable while exploring how a cellular automaton behaves in real time.
@@ -49,4 +49,4 @@ apt install python3-pygame
 ```
 
 ## Nota bene
-This video show some really interesting patterns: https://www.youtube.com/watch?v=C2vgICfQawE
+The man himself, John Conway who created the algorithm, about The game of Life: https://www.youtube.com/watch?v=R9Plq-D1gEk
