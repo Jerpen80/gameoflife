@@ -2,7 +2,9 @@ import pygame
 import sys
 import random
 
-cell_size = 5      
+editing = True  
+
+cell_size = 8      
 grid_width = 200
 grid_height = 200
 
@@ -11,6 +13,7 @@ density = 0.09
 
 alive_color = (255, 255, 255)  # white
 dead_color = (0, 0, 0)         # black
+grid_color = (40, 40, 40)      # grey grid during editing
 
 # Reduce game speed
 clock = pygame.time.Clock()
@@ -66,7 +69,7 @@ def step(grid):
 
 
 grid = make_grid(grid_width, grid_height)
-populate_grid_random(grid, density)
+# populate_grid_random(grid, density)
 pygame.init()
 
 window_width = grid_width * cell_size
@@ -82,9 +85,33 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    grid = step(grid)
+        if editing:
+            if event.type == pygame.MOUSEBUTTONDOWN: # Mouse button to toggle cells in editing phase
+                mouse_x, mouse_y = event.pos
+
+                x = mouse_x // cell_size
+                y = mouse_y // cell_size
+
+                if 0 <= x < grid_width and 0 <= y < grid_height:
+                    grid[y][x] = 0 if grid[y][x] == 1 else 1
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    editing = False
+
+    if not editing:
+        grid = step(grid)
 
     screen.fill(dead_color)
+    
+    if editing: # Draw grid while editing
+        # vertical lines
+        for x in range(0, window_width, cell_size):
+            pygame.draw.line(screen, grid_color, (x, 0), (x, window_height))
+
+        # horizontal lines
+        for y in range(0, window_height, cell_size):
+            pygame.draw.line(screen, grid_color, (0, y), (window_width, y))
 
     # draw grid
     for y in range(grid_height):
