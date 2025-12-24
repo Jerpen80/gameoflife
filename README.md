@@ -8,6 +8,25 @@ It is intentionally kept simple and readable while exploring how a cellular auto
 
 ---
 
+## Usage
+
+### Manual editing mode (default)
+
+When started without the `--random` flag, the program opens in **editing mode**:
+
+- Click on cells to toggle them alive or dead
+- Grid lines are shown to make placement easier
+- Press **SPACE** to start the simulation
+
+### Random start
+
+If the `--random` flag is provided, the grid is filled randomly withe the given density (a float between 0 and 1) and the simulation starts immediately:
+
+```bash
+python3 gameoflife.py --random 0.15
+```
+---
+
 ## Purpose
 
 The goal of this project is to **learn pygame by building a concrete, visual program**.
