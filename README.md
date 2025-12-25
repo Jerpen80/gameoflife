@@ -9,6 +9,16 @@ It is intentionally kept simple and readable while exploring how a cellular auto
 
 ---
 
+## Game rules 
+
+The Game of Life is, briefly, a two-dimensional cellular automata universe governed by a simple set of birth, death and survival rules.
+
+- survival: if a live cell has two or three live neighbors, it survives.
+- death: if a live cell has less than two or more than three live neighbors, it dies.
+- birth: if a dead cell has exactly three live neighbors, it is born. 
+
+---
+
 ## Usage
 
 ### Manual editing mode (default)
