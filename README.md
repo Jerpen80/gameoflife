@@ -13,20 +13,64 @@ It is intentionally kept simple and readable while exploring how a cellular auto
 
 ### Manual editing mode (default)
 
-When started without the `--random` flag, the program opens in **editing mode**:
+When started **without** the `--random` flag, the program opens in **editing mode**:
 
 - Click on cells to toggle them alive or dead
 - Grid lines are shown to make placement easier
 - Press **SPACE** to start the simulation
 - Press **N** to advance **one generation** and enter pause mode
 
+This mode is useful for manually constructing patterns and stepping through their evolution.
+
+---
+
 ### Random start
 
-If the `--random` flag is provided, the grid is filled randomly with the given density (a float between 0 and 1) and the simulation starts immediately:
+If the `--random` flag is provided, the grid is filled randomly with the given density (a float between `0` and `1`) and the simulation starts immediately:
 
 ```bash
 python3 gameoflife.py --random 0.15
 ```
+---
+
+## Controls
+
+### Keyboard
+
+- **SPACE**  
+  Toggle between:
+  - Edit → Run  
+  - Run → Pause  
+  - Pause → Run
+
+- **N**  
+  Advance the simulation by **one generation**  
+  - From **Edit mode**: enters Pause mode and advances once  
+  - From **Pause mode**: advances one generation
+
+- **Arrow keys**  
+  Pan the view when the grid is larger than the window:
+  - ← → move left / right  
+  - ↑ ↓ move up / down
+
+- **ESC**  
+  Quit the application
+
+---
+
+### Mouse
+
+- **Left click (Edit mode only)**  
+  Toggle a cell alive or dead at the cursor position
+
+---
+
+## Display and layout
+
+- The application opens in a **borderless fullscreen window**
+- If the grid is larger than the visible area, you can **pan the camera** using the arrow keys
+- The simulation continues to run for cells outside the visible area (only the view is moved)
+
 ---
 
 ## Purpose
@@ -46,9 +90,11 @@ This repository reflects an incremental learning process rather than a polished 
 ## Features
 
 - Pygame-based window and render loop  
-- Configurable grid size and cell size  
-- Adjustable simulation speed using a pygame clock  
-- Randomly generated starting state  
+- Manual editing of the starting grid  
+- Randomized starting state with configurable density  
+- Fullscreen display with camera panning  
+- Pause / resume and single-step execution  
+- Adjustable simulation speed  
 - Explicit and readable implementation of the Game of Life rules  
 - No external dependencies beyond pygame  
 
@@ -68,6 +114,9 @@ or
 ```bash
 apt install python3-pygame
 ```
+---
 
 ## Nota bene
-The man himself, John Conway who created the algorithm, about The game of Life: https://www.youtube.com/watch?v=R9Plq-D1gEk
+
+John Conway, the creator of the Game of Life, explaining the algorithm himself:  
+https://www.youtube.com/watch?v=R9Plq-D1gEk

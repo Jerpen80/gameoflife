@@ -56,19 +56,28 @@ def step(grid, grid_width, grid_height):
 
 def main(grid_width, grid_height, cell_size, fps, mode, density):
     
+    offset_x = 0
+    offset_y = 0
+    # SCROLL_SPEED: ammount of pixels to shift with arrow key presses
+    SCROLL_SPEED = 40
+
     clock = pygame.time.Clock()
+
+    screen = pygame.display.set_mode((0, 0), pygame.NOFRAME)
+    window_width, window_height = screen.get_size()
+    
+    # Fullscreen if x and y are 0 or less
+    if grid_width <= 0 or grid_height <= 0:
+        grid_width = window_width // cell_size
+        grid_height = window_height // cell_size
+
     grid = make_grid(grid_width, grid_height)
 
     if mode == "RUN" and density is not None:
         populate_grid_random(grid, density)
 
+    # Init pygame
     pygame.init()
-
-    window_width = grid_width * cell_size
-    window_height = grid_height * cell_size
-
-    screen = pygame.display.set_mode((window_width, window_height))
-    pygame.display.set_caption("Game of Life")
 
     # start:
     running = True
@@ -79,8 +88,22 @@ def main(grid_width, grid_height, cell_size, fps, mode, density):
 
             # keyboard controls (always)
             if event.type == pygame.KEYDOWN:
+                
+                # Escape to quit
+                if event.key == pygame.K_ESCAPE:
+                    running = False
 
-                if event.key == pygame.K_SPACE:
+                # shifting pixels with arrow keys relative to current position
+                elif event.key == pygame.K_LEFT:
+                    offset_x -= SCROLL_SPEED
+                elif event.key == pygame.K_RIGHT:
+                    offset_x += SCROLL_SPEED
+                elif event.key == pygame.K_UP:
+                    offset_y -= SCROLL_SPEED
+                elif event.key == pygame.K_DOWN:
+                     offset_y += SCROLL_SPEED
+
+                elif event.key == pygame.K_SPACE:
                     if mode == "EDIT":
                         mode = "RUN"
                     elif mode == "RUN":
@@ -95,20 +118,29 @@ def main(grid_width, grid_height, cell_size, fps, mode, density):
                     elif mode == "PAUSE":
                         grid = step(grid, grid_width, grid_height)
 
-            # mouse controls (EDIT only)
+                max_offset_x = grid_width * cell_size - window_width
+                max_offset_y = grid_height * cell_size - window_height
+
+                # Prevent camera from scrolling past the left or right edge of the grid
+                offset_x = max(0, min(max_offset_x, offset_x))
+                # Same for up and down
+                offset_y = max(0, min(max_offset_y, offset_y))
+
+            # Mouse controls (EDIT only)
             if mode == "EDIT" and event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_x, mouse_y = event.pos
-                x = mouse_x // cell_size
-                y = mouse_y // cell_size
+                
+                x = (mouse_x + offset_x) // cell_size
+                y = (mouse_y + offset_y) // cell_size
 
                 if 0 <= x < grid_width and 0 <= y < grid_height:
                     grid[y][x] = 0 if grid[y][x] == 1 else 1
 
-        # update simulation once per frame (RUN only)
+        # Update simulation once per frame (RUN only)
         if mode == "RUN":
             grid = step(grid, grid_width, grid_height)
 
-        # render
+        # Render
         screen.fill(dead_color)
 
         if mode == "EDIT":
@@ -123,7 +155,13 @@ def main(grid_width, grid_height, cell_size, fps, mode, density):
                     pygame.draw.rect(
                         screen,
                         alive_color,
-                        (x * cell_size, y * cell_size, cell_size, cell_size)
+                        (
+                            # prevent mouse offset by adding offset caused by scrolling with arrow keys
+                            x * cell_size - offset_x,
+                            y * cell_size - offset_y,
+                            cell_size,
+                            cell_size
+                        )
                     )
 
         pygame.display.flip()
@@ -139,12 +177,12 @@ if __name__ == '__main__':
         description="How to use The Game Of Life",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=textwrap.dedent('''Example:
-        python3 gameoflife.py -W 600 -H 350 -s 10
+        python3 gameoflife.py -x 600 -y 350 -c 20 -s 10
         ''')
     )
 
-    parser.add_argument('-W', '--width', type=int, default=300, help="Grid width")
-    parser.add_argument('-H', '--height', type=int, default=150, help="Grid height")
+    parser.add_argument('-x', '--width', type=int, default=0, help="Number of cells x axis, 0 for full screen")
+    parser.add_argument('-y', '--height', type=int, default=0, help="Number of cells y axis, 0 for full screen")
     parser.add_argument('-r', '--random', type=float, help="Fill starting grid randomly with a density between 0 and 1")
     parser.add_argument('-s', '--speed', type=int, default=10, help="Iterations per second")
     parser.add_argument('-c', '--cellsize', type=int, default=8, help="Cell size in pixels")
