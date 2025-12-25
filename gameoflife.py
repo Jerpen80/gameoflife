@@ -126,10 +126,8 @@ def main(grid_width, grid_height, cell_size, fps, mode, density):
                     )
 
         pygame.display.flip()
-        if mode == "RUN":
-            clock.tick(fps)
-        else:
-            clock.tick(60)
+        # untie gamespeed and editing speed
+        clock.tick(fps if mode == "RUN" else 30)
 
     pygame.quit()
     sys.exit()
@@ -145,7 +143,7 @@ if __name__ == '__main__':
     )
 
     parser.add_argument('-W', '--width', type=int, default=300, help="Grid width")
-    parser.add_argument('-H', '--height', type=int, default=300, help="Grid height")
+    parser.add_argument('-H', '--height', type=int, default=150, help="Grid height")
     parser.add_argument('-r', '--random', type=float, help="Fill starting grid randomly with a density between 0 and 1")
     parser.add_argument('-s', '--speed', type=int, default=10, help="Iterations per second")
     parser.add_argument('-c', '--cellsize', type=int, default=8, help="Cell size in pixels")
