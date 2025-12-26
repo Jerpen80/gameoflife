@@ -189,6 +189,8 @@ def main(grid_width, grid_height, cell_size, fps, mode, density):
 
                 if 0 <= x < grid_width and 0 <= y < grid_height:
                     grid[y][x] = 0 if grid[y][x] == 1 else 1
+                    
+                active = active_chunks_from_grid(grid, grid_width, grid_height, chunk_size)
 
         # Update simulation once per frame (RUN only)
         if mode == "RUN":
